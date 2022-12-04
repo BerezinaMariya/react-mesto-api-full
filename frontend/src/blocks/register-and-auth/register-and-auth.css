@@ -1,0 +1,12 @@
+.register-and-auth {
+    width: 358px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+@media screen and (max-width: 767px) {
+    .register-and-auth {
+        width: 260px;
+    }
+}

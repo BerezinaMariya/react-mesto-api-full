@@ -1,0 +1,23 @@
+.header_logged-in {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 880px;
+    min-height: 74px;
+    border-bottom: 1px solid rgba(84,84,84,0.7);
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+@media screen and (max-width: 767px) {
+    .header_logged-in {
+        display: grid;
+        grid-template-areas: 
+        "header__menu header__menu"
+        "header__logo header__menu-button";
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        align-items: baseline;
+        min-width: 266px;
+    }
+}

@@ -1,0 +1,10 @@
+.header__menu {
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 767px) {
+    .header__menu {
+        grid-area: header__menu;
+    }
+}

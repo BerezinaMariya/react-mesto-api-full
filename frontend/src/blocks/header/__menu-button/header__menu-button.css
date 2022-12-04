@@ -1,0 +1,19 @@
+.header__menu-button {
+    visibility: hidden;
+    padding: 0;
+    border: none;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: center;
+    background-color: rgba(255,255,255,0);
+    cursor: pointer;
+}
+
+@media screen and (max-width: 767px) {
+    .header__menu-button {
+        grid-area: header__menu-button;
+        justify-self: end;
+        margin: 31.5px 30px 31.5px 0;
+        visibility: visible;
+    }
+}

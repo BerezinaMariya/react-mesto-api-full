@@ -1,0 +1,17 @@
+.form__submit-button_for_register-and-auth {
+    background-color: #FFFFFF;
+    margin: 216px auto 15px;
+    color: #000000;
+}
+
+.form__submit-button_for_register-and-auth:hover {
+    opacity: 0.85;
+}
+
+@media screen and (max-width: 767px) {
+    .form__submit-button_for_register-and-auth {
+        font-size: 16px;
+        line-height: 19px;
+        margin-top: 173px;
+    }
+}

@@ -1,0 +1,7 @@
+@media screen and (max-width: 767px) {
+    .header__menu-button_type_close {
+        background-image: url(../../../../images/header-menu-button-type-close.svg);
+        width: 20px;
+        height: 20px;
+    }
+}
