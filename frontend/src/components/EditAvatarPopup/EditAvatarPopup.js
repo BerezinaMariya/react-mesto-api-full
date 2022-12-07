@@ -1,8 +1,11 @@
 import { useRef } from "react";
-import PopupWithForm from "../PopupWithForm/PopupWithForm";
+import { useContext } from "react";
 import { FormValidator } from "../FormValidator/FormValidator";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import PopupWithForm from "../PopupWithForm/PopupWithForm";
 
 function EditAvatarPopup(props) {
+  const currentUser = useContext(CurrentUserContext);
   const { values, handleChange, errors, handleOpenForm, isFormValid, resetForm } = FormValidator();
   const avatarRef = useRef();
 
@@ -10,6 +13,7 @@ function EditAvatarPopup(props) {
     evt.preventDefault();
 
     props.onUpdateAvatar(avatarRef.current.value);
+    currentUser.avatar = evt.target.value;
   }
 
   return (
@@ -34,7 +38,7 @@ function EditAvatarPopup(props) {
         name="avatar"
         id="input-avatar-url"
         ref={avatarRef}
-        placeholder="Ссылка на картинку"
+        placeholder="Ссылка на аватар"
         className={`form__input ${errors.avatar & errors.avatar !== '' ? "form__input_type_error" : ""}`}
         required
         value={`${values.avatar ? values.avatar : ''}`}

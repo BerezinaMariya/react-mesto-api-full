@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
-const { SALT_ROUND } = require('../config/config');
+const { SALT_ROUND, SECRET_KEY } = require('../config/config');
 
 const NotFoundError = require('../middlewares/errors/not-found-error');
 const BadRequestError = require('../middlewares/errors/bad-request-error');
@@ -30,12 +30,10 @@ module.exports.createUser = (req, res, next) => {
     }))
     .then(() => {
       res.status(created).send({
-        data: {
-          name,
-          about,
-          avatar,
-          email,
-        },
+        name,
+        about,
+        avatar,
+        email,
       });
     })
     .catch((err) => {
@@ -49,13 +47,13 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(ok).send({ data: users }))
+    .then((users) => res.status(ok).send(users))
     .catch(next);
 };
 
 module.exports.getСurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .then((user) => res.status(ok).send({ data: user }))
+    .then((user) => res.status(ok).send(user))
     .catch(next);
 };
 
@@ -64,7 +62,7 @@ module.exports.getUserId = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Запрашиваемый пользователь не найден');
     })
-    .then((user) => res.status(ok).send({ data: user }))
+    .then((user) => res.status(ok).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Передан невалидный id пользователя'));
@@ -76,26 +74,36 @@ module.exports.getUserId = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
+  const { NODE_ENV, JWT_SECRET } = process.env;
 
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        'some-secret-key',
+        NODE_ENV === 'production' ? JWT_SECRET : SECRET_KEY,
         { expiresIn: '7d' },
       );
 
       res.cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
-        sameSite: true,
+        sameSite: false,
       });
 
-      res.send({ token });
+      res.status(ok).send({ token });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
+};
+
+module.exports.exit = (req, res, next) => {
+  User.findById(req.user._id)
+    .orFail(() => {
+      throw new NotFoundError('Запрашиваемый пользователь не найден');
+    })
+    .then(() => {
+      res.clearCookie('jwt').send({ message: 'Вы покинули сайт' });
+    })
+    .catch(next);
 };
 
 module.exports.updateUserInfo = (req, res, next) => {
@@ -113,7 +121,7 @@ module.exports.updateUserInfo = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Запрашиваемый пользователь не найден');
     })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Передан невалидный id пользователя'));
@@ -138,7 +146,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Запрашиваемый пользователь не найден');
     })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Передан невалидный id пользователя'));

@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0566a8ee.css",
+    "main.js": "/static/js/main.e92862af.js",
+    "static/js/787.2df4b1c8.chunk.js": "/static/js/787.2df4b1c8.chunk.js",
+    "static/media/Inter-Medium.woff?v=3.19": "/static/media/Inter-Medium.9053572c46aeb4b16caa.woff",
+    "static/media/Inter-Black.woff": "/static/media/Inter-Black.c6938660eec019fefd68.woff",
+    "static/media/Inter-Regular.woff": "/static/media/Inter-Regular.8c206db99195777c6769.woff",
+    "static/media/Inter-Medium.woff2?v=3.19": "/static/media/Inter-Medium.293fd13dbca5a3e450ef.woff2",
+    "static/media/Inter-Black.woff2": "/static/media/Inter-Black.15ca31c0a2a68f76d2d1.woff2",
+    "static/media/Inter-Regular.woff2": "/static/media/Inter-Regular.c8ba52b05a9ef10f4758.woff2",
+    "static/media/header-logo.svg": "/static/media/header-logo.09d5a8a8680ced072f603c3e73781a87.svg",
+    "static/media/cardElement-group.svg": "/static/media/cardElement-group.1ad06e85f169668a1f36.svg",
+    "index.html": "/index.html",
+    "static/media/infoTooltip-unsucsess.svg": "/static/media/infoTooltip-unsucsess.d4ce2a261b68c6da973d51ef98afae1a.svg",
+    "static/media/cardElement-delete-button.svg": "/static/media/cardElement-delete-button.ce3b64935accf9b8212e.svg",
+    "static/media/infoTooltip-sucsess.svg": "/static/media/infoTooltip-sucsess.a9eb6caf1da3ff48b215fb1dd9477d74.svg",
+    "static/media/cardElement-group-fill.svg": "/static/media/cardElement-group-fill.35948469632d0421d697.svg",
+    "static/media/header-menu-button-type-open.svg": "/static/media/header-menu-button-type-open.ccf7020248ca1ffd1496.svg",
+    "static/media/profile-edit-button.svg": "/static/media/profile-edit-button.6c7bf05444b9793fdf6e.svg",
+    "static/media/profile-edit-avatar-button.svg": "/static/media/profile-edit-avatar-button.ae1a976ddb506239e9f0.svg",
+    "static/media/popup-close-button.svg": "/static/media/popup-close-button.039f1f5203f653b4bacd.svg",
+    "static/media/profile-add-button.svg": "/static/media/profile-add-button.bed8c136e13907f5eefb.svg",
+    "static/media/header-menu-button-type-close.svg": "/static/media/header-menu-button-type-close.622e8cdafa2222aa7c54.svg",
+    "main.0566a8ee.css.map": "/static/css/main.0566a8ee.css.map",
+    "main.e92862af.js.map": "/static/js/main.e92862af.js.map",
+    "787.2df4b1c8.chunk.js.map": "/static/js/787.2df4b1c8.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0566a8ee.css",
+    "static/js/main.e92862af.js"
+  ]
+}

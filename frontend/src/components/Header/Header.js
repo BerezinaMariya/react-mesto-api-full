@@ -1,20 +1,20 @@
 import { useState, useContext, useEffect } from "react";
 import { Route, Switch, Link } from "react-router-dom";
-import { RegistrationDataContext } from "../../contexts/RegistrationDataContext";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import headerLogo from "../../images/header-logo.svg";
 
 function Header(props) {
-  const registrationData = useContext(RegistrationDataContext);
+  const currentUser = useContext(CurrentUserContext);
 
-  const [email, setEmail] = useState(registrationData.email);
+  const [email, setEmail] = useState(currentUser.email);
   const [menuButtonState, setMenuButtonState] = useState("open");
   const [menuState, setMenuState] = useState("close");
 
   function handleButtonClick() {
     localStorage.removeItem("jwt");
     props.setLoggedIn(false);
-    setEmail("");
-  }
+    props.onExit();
+   }
 
   function handleMenuButtonClick() {
     if (menuButtonState === "open") {
@@ -28,7 +28,7 @@ function Header(props) {
 
   useEffect(() => {
     if (props.loggedIn) {
-      setEmail(registrationData.email);
+      setEmail(currentUser.email);
     } else {
       setMenuButtonState("open");
       setMenuState("close");

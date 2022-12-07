@@ -7,6 +7,7 @@ const {
   getUserId,
   updateUserInfo,
   updateUserAvatar,
+  exit,
 } = require('../controllers/users');
 const { isIdValid } = require('../helpers/isIdValid');
 const { URL_REGEX } = require('../config/config');
@@ -45,5 +46,7 @@ router.patch(
   }),
   updateUserAvatar,
 );
+
+router.post('/signout', exit);
 
 module.exports = router;

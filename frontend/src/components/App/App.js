@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Switch, Redirect, useHistory } from "react-router-dom";
+import { Route, Switch, Redirect, useHistory, BrowserRouter } from "react-router-dom";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
@@ -68,7 +68,7 @@ function getInitialCards(setCards) {
   api
     .getInitialCards()
     .then((res) => {
-      setCards(res);
+      setCards(res.reverse());
     })
     .catch((err) => {
       alert(`${err} Карточки не загружены`);
@@ -125,18 +125,20 @@ function setNewCard(newCard, cards, setCards, setLoading, setPopupClosed) {
 
 function register(
   registrationData,
+  setRegistrationData,
   setMessage,
   setRegOrLogSucsessStatus,
   setInfoTooltipOpen,
   history
 ) {
   api
-    .register(registrationData.password, registrationData.email)
+    .register(registrationData.name, registrationData.about, registrationData.avatar, registrationData.email, registrationData.password )
     .then((res) => {
       if (res) {
         setMessage("Вы успешно зарегистрировались!");
         setRegOrLogSucsessStatus(true);
         setInfoTooltipOpen(true);
+        setRegistrationData({});
       }
     })
     .then(() => history.push("/signin"))
@@ -149,6 +151,7 @@ function register(
 
 function authorize(
   registrationData,
+  setCurrentUser,
   setMessage,
   setLoggedIn,
   setRegOrLogSucsessStatus,
@@ -161,15 +164,9 @@ function authorize(
   api
     .authorize(registrationData.password, registrationData.email)
     .then((res) => {
-      if (res.token) {
-        localStorage.setItem("jwt", res.token);
-      } else {
-        return;
-      }
-    })
-    .then(() => {
       setLoggedIn(true);
       history.push("/");
+      setCurrentUser({ email: registrationData.email });
     })
     .catch((err) => {
       setMessage(err.message || "Что-то пошло не так! Попробуйте ещё раз.");
@@ -178,18 +175,29 @@ function authorize(
     });
 }
 
-function getEmail(jwt, setLoggedIn, history, setRegistrationData) {
+function getEmail( setLoggedIn, history, setCurrentUser) {
   api
-    .getEmail(jwt)
+    .getEmail()
     .then((res) => {
-      if (res) {
-        setLoggedIn(true);
-        history.push("/");
-        setRegistrationData({ email: res.data.email });
-      }
+      setLoggedIn(true);
+      history.push("/");
+      setCurrentUser({ email: res.email });
     })
     .catch((err) => {
-      alert(`${err} Проверка токена не пройдена`);
+      alert(`${err} Проверка авторизации не пройдена`);
+    });
+}
+
+function exit( setLoggedIn, history, setCurrentUser ) {
+  api
+    .exit()
+    .then(() => {
+      setLoggedIn(false);
+      history.push("/signin");
+      setCurrentUser({ email: "" });
+    })
+    .catch((err) => {
+      alert(`${err} Выход с сайта не выполнен`);
     });
 }
 
@@ -244,7 +252,7 @@ function App() {
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
     changeLikeCardStatus(card, isLiked, setCards);
   }
 
@@ -265,8 +273,15 @@ function App() {
   }
 
   function handleRegister() {
+    Object.keys(registrationData).forEach((i) => {
+      if (registrationData[i] === '') {
+        delete registrationData[i];
+      }
+    });
+  
     register(
       registrationData,
+      setRegistrationData,
       setMessage,
       setRegOrLogSucsessStatus,
       setInfoTooltipOpen,
@@ -277,6 +292,7 @@ function App() {
   function handleLoggedIn() {
     authorize(
       registrationData,
+      setCurrentUser,
       setMessage,
       setLoggedIn,
       setRegOrLogSucsessStatus,
@@ -286,10 +302,11 @@ function App() {
   }
 
   function handleTokenCheck() {
-    if (localStorage.getItem("jwt")) {
-      const jwt = localStorage.getItem("jwt");
-      getEmail(jwt, setLoggedIn, history, setRegistrationData);
-    }
+    getEmail(setLoggedIn, history, setCurrentUser);
+  }
+
+  function handleExit() {
+    exit( setLoggedIn, history, setCurrentUser );
   }
 
   //Закрытие popup по клику по overlay
@@ -319,14 +336,16 @@ function App() {
   }, [loggedIn]);
 
   useEffect(() => {
-    handleTokenCheck();
+    if(loggedIn) {
+      handleTokenCheck();
+    }
   }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <RegistrationDataContext.Provider value={registrationData}>
         <CardsContext.Provider value={cards}>
-          <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+          <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} onExit={handleExit}/>
           <Switch>
             <ProtectedRoute
               exact path="/"

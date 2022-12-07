@@ -9,7 +9,7 @@ const created = 201;
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.status(ok).send({ data: cards }))
+    .then((cards) => res.status(ok).send(cards))
     .catch(next);
 };
 
@@ -17,7 +17,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.status(created).send({ data: card }))
+    .then((card) => res.status(created).send(card))
     .catch((err) => next(err));
 };
 
@@ -52,7 +52,7 @@ module.exports.likeCard = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Запрашиваемая карточка не найдена');
     })
-    .then((card) => res.status(ok).send({ data: card }))
+    .then((card) => res.status(ok).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Передан невалидный id карточки'));
@@ -71,7 +71,7 @@ module.exports.dislikeCard = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Запрашиваемая карточка не найдена');
     })
-    .then((card) => res.status(ok).send({ data: card }))
+    .then((card) => res.status(ok).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Передан невалидный id карточки'));

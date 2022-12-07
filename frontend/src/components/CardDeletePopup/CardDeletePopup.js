@@ -2,7 +2,7 @@ import PopupWithForm from "../PopupWithForm/PopupWithForm";
 import { FormValidator } from "../FormValidator/FormValidator";
 
 function CardDeletePopup(props) {
-  const { values, handleChange, errors, handleOpenForm, isFormValid, resetForm } = FormValidator();
+  const { handleOpenForm, isFormValid } = FormValidator();
 
   function handleSubmit(evt) {
     evt.preventDefault();

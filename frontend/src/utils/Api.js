@@ -1,9 +1,9 @@
 class Api {
   constructor() {
-    this.baseUrl = "https://mesto.nomoreparties.co/v1/cohort-49";
-    this.newBaseUrl = "https://auth.nomoreparties.co";
+    this.baseUrl = "https://api.mesto.berezina.nomoredomains.club";
+    //this.baseUrl = "http://localhost:3001";
   }
-
+ 
   //Проверка ответа от сервера
   _checkResponse(res) {
     if (res.ok) {
@@ -18,9 +18,9 @@ class Api {
   getInitialCards() {
     return fetch(`${this.baseUrl}/cards`, {
       headers: {
-        Authorization: "c8e88be4-173c-499a-97f5-515e9331d7ba",
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }).then(this._checkResponse);
   }
 
@@ -28,9 +28,9 @@ class Api {
   getUserInfo() {
     return fetch(`${this.baseUrl}/users/me`, {
       headers: {
-        Authorization: "c8e88be4-173c-499a-97f5-515e9331d7ba",
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }).then(this._checkResponse);
   }
 
@@ -39,13 +39,13 @@ class Api {
     return fetch(`${this.baseUrl}/users/me`, {
       method: "PATCH",
       headers: {
-        Authorization: "c8e88be4-173c-499a-97f5-515e9331d7ba",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         name: user.name,
         about: user.about,
       }),
+      credentials: "include",
     }).then(this._checkResponse);
   }
 
@@ -54,12 +54,12 @@ class Api {
     return fetch(`${this.baseUrl}/users/me/avatar`, {
       method: "PATCH",
       headers: {
-        Authorization: "c8e88be4-173c-499a-97f5-515e9331d7ba",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         avatar: avatar,
       }),
+      credentials: "include",
     }).then(this._checkResponse);
   }
 
@@ -68,13 +68,13 @@ class Api {
     return fetch(`${this.baseUrl}/cards`, {
       method: "POST",
       headers: {
-        Authorization: "c8e88be4-173c-499a-97f5-515e9331d7ba",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         name: card.name,
         link: card.link,
       }),
+      credentials: "include",
     }).then(this._checkResponse);
   }
 
@@ -83,9 +83,9 @@ class Api {
     return fetch(`${this.baseUrl}/cards/${cardId}`, {
       method: "DELETE",
       headers: {
-        Authorization: "c8e88be4-173c-499a-97f5-515e9331d7ba",
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }).then(this._checkResponse);
   }
 
@@ -95,53 +95,66 @@ class Api {
       return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
         method: "PUT",
         headers: {
-          Authorization: "c8e88be4-173c-499a-97f5-515e9331d7ba",
           "Content-Type": "application/json",
         },
+        credentials: "include",
       }).then(this._checkResponse);
     } else {
       return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
         method: "DELETE",
         headers: {
-          Authorization: "c8e88be4-173c-499a-97f5-515e9331d7ba",
           "Content-Type": "application/json",
         },
+        credentials: "include",
       }).then(this._checkResponse);
     }
   }
 
   //Регистрация
-  register(password, email) {
-    return fetch(`${this.newBaseUrl}/signup`, {
+  register( name, about, avatar, email, password ) {
+    return fetch(`${this.baseUrl}/signup`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ password, email }),
+      body: JSON.stringify({ name, about, avatar, email, password }),
     }).then(this._checkResponse);
   }
 
   //Авторизация
   authorize(password, email) {
-    return fetch(`${this.newBaseUrl}/signin`, {
+    return fetch(`${this.baseUrl}/signin`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ password, email }),
     }).then(this._checkResponse);
   }
 
   //Проверка токена, получение email
-  getEmail(token) {
-    return fetch(`${this.newBaseUrl}/users/me`, {
+  getEmail() {
+    return fetch(`${this.baseUrl}/users/me`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
+      credentials: "include",
+    }).then(this._checkResponse);
+  }
+
+  //Выход с сайта
+  exit() {
+    return fetch(`${this.baseUrl}/users/signout`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
     }).then(this._checkResponse);
   }
 }

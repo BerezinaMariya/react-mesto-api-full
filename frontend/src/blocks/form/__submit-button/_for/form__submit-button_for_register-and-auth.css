@@ -1,6 +1,6 @@
 .form__submit-button_for_register-and-auth {
     background-color: #FFFFFF;
-    margin: 216px auto 15px;
+    margin: 45px auto 15px;
     color: #000000;
 }
 
@@ -12,6 +12,6 @@
     .form__submit-button_for_register-and-auth {
         font-size: 16px;
         line-height: 19px;
-        margin-top: 173px;
+        margin-top: 30px;
     }
 }

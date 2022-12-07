@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
 import RegisterAndAuthPage from "../RegisterAndAuthPage/RegisterAndAuthPage";
 
-
 function Register(props) {
-
   function handleSubmit(evt) {
     evt.preventDefault();
     props.onRegister();
