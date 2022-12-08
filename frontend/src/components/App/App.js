@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Switch, Redirect, useHistory, BrowserRouter } from "react-router-dom";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
@@ -16,6 +16,86 @@ import { api } from "../../utils/Api";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import { CardsContext } from "../../contexts/CardsContext";
 import { RegistrationDataContext } from "../../contexts/RegistrationDataContext";
+
+function register(
+  registrationData,
+  setRegistrationData,
+  setMessage,
+  setRegOrLogSucsessStatus,
+  setInfoTooltipOpen,
+  history
+) {
+  api
+    .register(registrationData.name, registrationData.about, registrationData.avatar, registrationData.email, registrationData.password )
+    .then((res) => {
+      if (res) {
+        setMessage("Вы успешно зарегистрировались!");
+        setRegOrLogSucsessStatus(true);
+        setInfoTooltipOpen(true);
+        setRegistrationData({});
+      }
+    })
+    .then(() => history.push("/signin"))
+    .catch((err) => {
+      setMessage(err.message || "Что-то пошло не так! Попробуйте ещё раз.");
+      setRegOrLogSucsessStatus(false);
+      setInfoTooltipOpen(true);
+    });
+}
+
+function authorize(
+  registrationData,
+  setCurrentUser,
+  setMessage,
+  setLoggedIn,
+  setRegOrLogSucsessStatus,
+  setInfoTooltipOpen,
+  history
+) {
+  if (!registrationData.password || !registrationData.email) {
+    return;
+  }
+  api
+    .authorize(registrationData.password, registrationData.email)
+    .then(() => {
+      setLoggedIn(true);
+      history.push("/");
+      setCurrentUser({ email: registrationData.email });
+      localStorage.setItem('loggedIn', true);
+    })
+    .catch((err) => {
+      setMessage(err.message || "Что-то пошло не так! Попробуйте ещё раз.");
+      setRegOrLogSucsessStatus(false);
+      setInfoTooltipOpen(true);
+    });
+}
+
+function getEmail( setLoggedIn, history, setCurrentUser) {
+  api
+    .getEmail()
+    .then((res) => {
+      setLoggedIn(true);
+      history.push("/");
+      setCurrentUser({ email: res.email });
+    })
+    .catch((err) => {
+      alert(`${err} Проверка авторизации не пройдена`);
+    });
+}
+
+function exit( setLoggedIn, history, setCurrentUser ) {
+  api
+    .exit()
+    .then(() => {
+      setLoggedIn(false);
+      history.push("/signin");
+      setCurrentUser({ email: "" });
+      localStorage.setItem('loggedIn', false);
+    })
+    .catch((err) => {
+      alert(`${err} Выход с сайта не выполнен`);
+    });
+}
 
 function getUserInfo(setCurrentUser) {
   api
@@ -123,84 +203,6 @@ function setNewCard(newCard, cards, setCards, setLoading, setPopupClosed) {
     });
 }
 
-function register(
-  registrationData,
-  setRegistrationData,
-  setMessage,
-  setRegOrLogSucsessStatus,
-  setInfoTooltipOpen,
-  history
-) {
-  api
-    .register(registrationData.name, registrationData.about, registrationData.avatar, registrationData.email, registrationData.password )
-    .then((res) => {
-      if (res) {
-        setMessage("Вы успешно зарегистрировались!");
-        setRegOrLogSucsessStatus(true);
-        setInfoTooltipOpen(true);
-        setRegistrationData({});
-      }
-    })
-    .then(() => history.push("/signin"))
-    .catch((err) => {
-      setMessage(err.message || "Что-то пошло не так! Попробуйте ещё раз.");
-      setRegOrLogSucsessStatus(false);
-      setInfoTooltipOpen(true);
-    });
-}
-
-function authorize(
-  registrationData,
-  setCurrentUser,
-  setMessage,
-  setLoggedIn,
-  setRegOrLogSucsessStatus,
-  setInfoTooltipOpen,
-  history
-) {
-  if (!registrationData.password || !registrationData.email) {
-    return;
-  }
-  api
-    .authorize(registrationData.password, registrationData.email)
-    .then((res) => {
-      setLoggedIn(true);
-      history.push("/");
-      setCurrentUser({ email: registrationData.email });
-    })
-    .catch((err) => {
-      setMessage(err.message || "Что-то пошло не так! Попробуйте ещё раз.");
-      setRegOrLogSucsessStatus(false);
-      setInfoTooltipOpen(true);
-    });
-}
-
-function getEmail( setLoggedIn, history, setCurrentUser) {
-  api
-    .getEmail()
-    .then((res) => {
-      setLoggedIn(true);
-      history.push("/");
-      setCurrentUser({ email: res.email });
-    })
-    .catch((err) => {
-      alert(`${err} Проверка авторизации не пройдена`);
-    });
-}
-
-function exit( setLoggedIn, history, setCurrentUser ) {
-  api
-    .exit()
-    .then(() => {
-      setLoggedIn(false);
-      history.push("/signin");
-      setCurrentUser({ email: "" });
-    })
-    .catch((err) => {
-      alert(`${err} Выход с сайта не выполнен`);
-    });
-}
-
 function App() {
   const history = useHistory();
 
@@ -209,16 +211,18 @@ function App() {
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   const [isCardDeletePopupOpen, setCardDeletePopupOpen] = useState(false);
   const [isInfoTooltipOpen, setInfoTooltipOpen] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [isPopupClosed, setPopupClosed] = useState(false);
+
+  const [registrationData, setRegistrationData] = useState({});
+  const [currentUser, setCurrentUser] = useState({});
+  const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState({ name: "", link: "" });
   const [deletedCard, setDeleteCard] = useState({ name: "", link: "" });
-  const [currentUser, setCurrentUser] = useState({});
-  const [registrationData, setRegistrationData] = useState({});
-  const [cards, setCards] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [message, setMessage] = useState("");
+  
   const [RegOrLogSucsessStatus, setRegOrLogSucsessStatus] = useState(false);
-  const [isPopupClosed, setPopupClosed] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
@@ -272,6 +276,25 @@ function App() {
     setNewCard(newCard, cards, setCards, setLoading, setPopupClosed);
   }
 
+  //Закрытие popup по клику по overlay
+  function setCloseByOverlayListener(popup) {
+    popup.addEventListener("mousedown", (evt) => {
+      const targetClasses = evt.target.classList;
+      if (targetClasses.contains("popup_opened")) {
+        setPopupClosed(true);
+        closeAllPopups();
+      }
+    });
+  }
+  
+  //Закрытие popup при нажатии на Esc
+  function handleCloseByEsc(evt) {
+    if (evt.key === "Escape") {
+      setPopupClosed(true);
+      closeAllPopups();
+    }
+  }
+
   function handleRegister() {
     Object.keys(registrationData).forEach((i) => {
       if (registrationData[i] === '') {
@@ -302,30 +325,13 @@ function App() {
   }
 
   function handleTokenCheck() {
-    getEmail(setLoggedIn, history, setCurrentUser);
+    if (localStorage.getItem('loggedIn') === 'true') {
+      getEmail(setLoggedIn, history, setCurrentUser);
+    }
   }
 
   function handleExit() {
     exit( setLoggedIn, history, setCurrentUser );
-  }
-
-  //Закрытие popup по клику по overlay
-  function setCloseByOverlayListener(popup) {
-    popup.addEventListener("mousedown", (evt) => {
-      const targetClasses = evt.target.classList;
-      if (targetClasses.contains("popup_opened")) {
-        setPopupClosed(true);
-        closeAllPopups();
-      }
-    });
-  }
-
-  //Закрытие popup при нажатии на Esc
-  function handleCloseByEsc(evt) {
-    if (evt.key === "Escape") {
-      setPopupClosed(true);
-      closeAllPopups();
-    }
   }
 
   useEffect(() => {
@@ -336,9 +342,7 @@ function App() {
   }, [loggedIn]);
 
   useEffect(() => {
-    if(loggedIn) {
-      handleTokenCheck();
-    }
+     handleTokenCheck();
   }, []);
 
   return (

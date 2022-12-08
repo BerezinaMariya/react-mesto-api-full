@@ -2,15 +2,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
-const { SALT_ROUND, SECRET_KEY } = require('../config/config');
+const {
+  SALT_ROUND,
+  SECRET_KEY,
+  OK,
+  CREATED,
+} = require('../config/config');
 
 const NotFoundError = require('../middlewares/errors/not-found-error');
 const BadRequestError = require('../middlewares/errors/bad-request-error');
 const ConflictError = require('../middlewares/errors/conflict-error');
 
-const ok = 200;
-const created = 201;
-
+// Регистрация
 module.exports.createUser = (req, res, next) => {
   const {
     name,
@@ -29,7 +32,7 @@ module.exports.createUser = (req, res, next) => {
       password: hash,
     }))
     .then(() => {
-      res.status(created).send({
+      res.status(CREATED).send({
         name,
         about,
         avatar,
@@ -45,33 +48,7 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 
-module.exports.getUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => res.status(ok).send(users))
-    .catch(next);
-};
-
-module.exports.getСurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
-    .then((user) => res.status(ok).send(user))
-    .catch(next);
-};
-
-module.exports.getUserId = (req, res, next) => {
-  User.findById(req.params.userId)
-    .orFail(() => {
-      throw new NotFoundError('Запрашиваемый пользователь не найден');
-    })
-    .then((user) => res.status(ok).send(user))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Передан невалидный id пользователя'));
-      } else {
-        next(err);
-      }
-    });
-};
-
+// Авторизация
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   const { NODE_ENV, JWT_SECRET } = process.env;
@@ -90,11 +67,12 @@ module.exports.login = (req, res, next) => {
         sameSite: false,
       });
 
-      res.status(ok).send({ token });
+      res.status(OK).send({ token });
     })
     .catch(next);
 };
 
+// Выход с сайта
 module.exports.exit = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(() => {
@@ -104,6 +82,33 @@ module.exports.exit = (req, res, next) => {
       res.clearCookie('jwt').send({ message: 'Вы покинули сайт' });
     })
     .catch(next);
+};
+
+module.exports.getUsers = (req, res, next) => {
+  User.find({})
+    .then((users) => res.status(OK).send(users))
+    .catch(next);
+};
+
+module.exports.getСurrentUser = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => res.status(OK).send(user))
+    .catch(next);
+};
+
+module.exports.getUserId = (req, res, next) => {
+  User.findById(req.params.userId)
+    .orFail(() => {
+      throw new NotFoundError('Запрашиваемый пользователь не найден');
+    })
+    .then((user) => res.status(OK).send(user))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Передан невалидный id пользователя'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.updateUserInfo = (req, res, next) => {
