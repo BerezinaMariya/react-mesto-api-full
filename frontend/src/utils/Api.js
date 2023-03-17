@@ -1,7 +1,7 @@
 class Api {
   constructor() {
-    this.baseUrl = "https://api.mesto.berezina.nomoredomains.club";
-    //this.baseUrl = "http://localhost:3001";
+    //this.baseUrl = "https://api.mesto.berezina.nomoredomains.club";
+    this.baseUrl = "http://localhost:3001";
   }
  
   //Проверка ответа от сервера
