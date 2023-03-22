@@ -45,5 +45,5 @@
 * Логирования запросов и ошибок.
 
 #### Проект развернут на облачном сервере
-Frontend https://mesto.berezina.nomoredomains.club
+Frontend https://mesto.berezina.nomoredomains.club  
 Backend https://api.mesto.berezina.nomoredomains.club
