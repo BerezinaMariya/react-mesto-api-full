@@ -16,7 +16,6 @@
 * Webpack
 * React
 * Express.js
-* Node.js
 * MongoDB
 * ODM Mongoose
 * Postman
