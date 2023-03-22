@@ -44,6 +44,6 @@
 * Обработка ошибок, возникающих в процессе работы приложения.
 * Логирования запросов и ошибок.
 
-Проект развернут на облачном сервере:
-* Frontend https://mesto.berezina.nomoredomains.club
-* Backend https://api.mesto.berezina.nomoredomains.club
+#### Проект развернут на облачном сервере
+Frontend https://mesto.berezina.nomoredomains.club
+Backend https://api.mesto.berezina.nomoredomains.club
