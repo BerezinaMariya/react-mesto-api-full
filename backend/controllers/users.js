@@ -1,12 +1,15 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const User = require('../models/user');
+
 const {
+  OK_200,
+  CREATED_201,
   SALT_ROUND,
   SECRET_KEY,
-  OK,
-  CREATED,
+  NOT_FOUND_ERROR_MESSAGE,
+  BAD_REQUEST_ERROR_MESSAGE,
+  EXIT_MESSAGE,
 } = require('../config/config');
 
 const NotFoundError = require('../middlewares/errors/not-found-error');
@@ -32,16 +35,16 @@ module.exports.createUser = (req, res, next) => {
       password: hash,
     }))
     .then(() => {
-      res.status(CREATED).send({
+      res.status(CREATED_201).send({
         name,
         about,
         avatar,
-        email,
+        // email,
       });
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует'));
+        next(new ConflictError(err));
       } else {
         next(err);
       }
@@ -67,7 +70,7 @@ module.exports.login = (req, res, next) => {
         sameSite: false,
       });
 
-      res.status(OK).send({ token });
+      res.status(OK_200).send({ token });
     })
     .catch(next);
 };
@@ -76,35 +79,35 @@ module.exports.login = (req, res, next) => {
 module.exports.exit = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(() => {
-      throw new NotFoundError('Запрашиваемый пользователь не найден');
+      throw new NotFoundError(NOT_FOUND_ERROR_MESSAGE);
     })
     .then(() => {
-      res.clearCookie('jwt').send({ message: 'Вы покинули сайт' });
+      res.clearCookie('jwt').send({ message: EXIT_MESSAGE });
     })
     .catch(next);
 };
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(OK).send(users))
+    .then((users) => res.status(OK_200).send(users))
     .catch(next);
 };
 
 module.exports.getСurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .then((user) => res.status(OK).send(user))
+    .then((user) => res.status(OK_200).send(user))
     .catch(next);
 };
 
 module.exports.getUserId = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(() => {
-      throw new NotFoundError('Запрашиваемый пользователь не найден');
+      throw new NotFoundError(NOT_FOUND_ERROR_MESSAGE);
     })
-    .then((user) => res.status(OK).send(user))
+    .then((user) => res.status(OK_200).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Передан невалидный id пользователя'));
+        next(new BadRequestError(BAD_REQUEST_ERROR_MESSAGE));
       } else {
         next(err);
       }
@@ -124,12 +127,12 @@ module.exports.updateUserInfo = (req, res, next) => {
     },
   )
     .orFail(() => {
-      throw new NotFoundError('Запрашиваемый пользователь не найден');
+      throw new NotFoundError(NOT_FOUND_ERROR_MESSAGE);
     })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Передан невалидный id пользователя'));
+        next(new BadRequestError(BAD_REQUEST_ERROR_MESSAGE));
       } else {
         next(err);
       }
@@ -149,12 +152,12 @@ module.exports.updateUserAvatar = (req, res, next) => {
     },
   )
     .orFail(() => {
-      throw new NotFoundError('Запрашиваемый пользователь не найден');
+      throw new NotFoundError(NOT_FOUND_ERROR_MESSAGE);
     })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Передан невалидный id пользователя'));
+        next(new BadRequestError(BAD_REQUEST_ERROR_MESSAGE));
       } else {
         next(err);
       }

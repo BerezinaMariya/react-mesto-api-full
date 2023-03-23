@@ -15,31 +15,31 @@ module.exports.validateUserRegData = celebrate({
     avatar: avatarValidationRequirements,
     email: emailValidationRequirements,
     password: passwordValidationRequirements,
-  }).unknown(true),
+  }),
 });
 
 module.exports.validateUserAuthData = celebrate({
   body: Joi.object().keys({
     email: emailValidationRequirements,
     password: passwordValidationRequirements,
-  }).unknown(true),
+  }),
 });
 
 module.exports.validateUserId = celebrate({
   params: Joi.object().keys({
     userId: isIdValid,
-  }).unknown(true),
+  }),
 });
 
 module.exports.validateUserInfo = celebrate({
   body: Joi.object().keys({
     name: nameAndAboutValidationRequirements,
     about: nameAndAboutValidationRequirements,
-  }).unknown(true),
+  }),
 });
 
 module.exports.validateUserAvatar = celebrate({
   body: Joi.object().keys({
     avatar: avatarValidationRequirements,
-  }).unknown(true),
+  }),
 });

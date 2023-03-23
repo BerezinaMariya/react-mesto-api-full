@@ -4,6 +4,7 @@ const { validateUserRegData, validateUserAuthData } = require('../middlewares/va
 const { login, createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 const NotFoundError = require('../middlewares/errors/not-found-error');
+const { PAGE_NOT_FOUND_MESSAGE } = require('../config/config');
 
 const userRouter = require('./users');
 const cardRouter = require('./cards');
@@ -26,7 +27,7 @@ router.use('/users', userRouter);
 router.use('/cards', cardRouter);
 
 router.use(() => {
-  throw new NotFoundError('Страница по указанному маршруту не найдена');
+  throw new NotFoundError(PAGE_NOT_FOUND_MESSAGE);
 });
 
 module.exports = router;

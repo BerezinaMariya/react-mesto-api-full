@@ -10,11 +10,11 @@ module.exports.validateCardData = celebrate({
   body: Joi.object().keys({
     name: nameValidationRequirements,
     link: linkValidationRequirements,
-  }).unknown(true),
+  }),
 });
 
 module.exports.validateCardId = celebrate({
   params: Joi.object().keys({
     cardId: isIdValid,
-  }).unknown(true),
+  }),
 });

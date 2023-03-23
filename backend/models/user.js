@@ -5,27 +5,36 @@ const validator = require('validator');
 const BadRequestError = require('../middlewares/errors/bad-request-error');
 const UnauthorizedError = require('../middlewares/errors/unauthorized-error');
 
+const {
+  URL_REGEX_LINK,
+  DEFAULT_NAME,
+  DEFAULT_ABOUT,
+  DEFAULT_AVATAR,
+  VALIDATION_MESSAGE,
+  BAD_EMAIL_OR_PASSWORD_MESSAGE,
+} = require('../config/config');
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     minlength: 2,
     maxlength: 30,
-    default: 'Жак-Ив Кусто',
+    default: DEFAULT_NAME,
   },
   about: {
     type: String,
     minlength: 2,
     maxlength: 30,
-    default: 'Исследователь',
+    default: DEFAULT_ABOUT,
   },
   avatar: {
     type: String,
-    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    default: DEFAULT_AVATAR,
     validate: {
       validator(value) {
-        return /^(http|https):\/\/[w{3}.]?[\w-._~:/?#[\]@!$&'()*+,;=]#?/gi.test(value);
+        return URL_REGEX_LINK.test(value);
       },
-      message: 'Указан невалидный Url аватара',
+      message: VALIDATION_MESSAGE,
     },
   },
   email: {
@@ -34,7 +43,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: validator.isEmail,
-      message: 'Указан невалидный email',
+      message: VALIDATION_MESSAGE,
     },
   },
   password: {
@@ -50,12 +59,12 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
+        return Promise.reject(new UnauthorizedError(BAD_EMAIL_OR_PASSWORD_MESSAGE));
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new BadRequestError('Неправильные почта или пароль'));
+            return Promise.reject(new BadRequestError(BAD_EMAIL_OR_PASSWORD_MESSAGE));
           }
           return user;
         });

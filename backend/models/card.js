@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+const {
+  URL_REGEX_LINK,
+  VALIDATION_MESSAGE,
+} = require('../config/config');
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -12,9 +17,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(value) {
-        return /^(http|https):\/\/[w{3}.]?[\w-._~:/?#[\]@!$&'()*+,;=]#?/gi.test(value);
+        return URL_REGEX_LINK.test(value);
       },
-      message: 'Указан невалидный Url изображения',
+      message: VALIDATION_MESSAGE,
     },
   },
   owner: {
