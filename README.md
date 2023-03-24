@@ -45,5 +45,5 @@
 
 #### Проект развернут на облачном сервере
 https://mesto.berezina.nomoredomains.club  
-https://api.mesto.berezina.nomoredomains.club
+https://api.mesto.berezina.nomoredomains.club  
 IP: 51.250.88.62
