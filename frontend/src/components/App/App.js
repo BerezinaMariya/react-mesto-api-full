@@ -37,9 +37,13 @@ function register(
     })
     .then(() => history.push("/signin"))
     .catch(async (err) => {
-      var body = await err.json();
+      if (err.body) {
+        var errBody = await err.json();
+        setMessage(errBody.message);
+      } else {
+        setMessage("Что-то пошло не так! Попробуйте ещё раз.");
+      }
       setRegOrLogSucsessStatus(false);
-      setMessage(body.message || "Что-то пошло не так! Попробуйте ещё раз.");
       setInfoTooltipOpen(true);
     });
 }
@@ -64,8 +68,13 @@ function authorize(
       setCurrentUser({ email: registrationData.email });
       localStorage.setItem('loggedIn', true);
     })
-    .catch((err) => {
-      setMessage(err.message || "Что-то пошло не так! Попробуйте ещё раз.");
+    .catch(async (err) => {
+      if (err.body) {
+        var errBody = await err.json();
+        setMessage(errBody.message);
+      } else {
+        setMessage("Что-то пошло не так! Попробуйте ещё раз.");
+      }
       setRegOrLogSucsessStatus(false);
       setInfoTooltipOpen(true);
     });
