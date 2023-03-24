@@ -10,6 +10,7 @@
 * HTML
 * CSS
 * JavaScript
+* JSX
 * GitHub
 * Figma
 * Node.js
