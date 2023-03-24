@@ -10,8 +10,6 @@ function EditProfilePopup(props) {
 
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
-  const [userName, setUserName] = useState("");
-  const [userAbout, setUserAbout] = useState("");
 
   function handleSubmit(evt) {
     // Запрещаем браузеру переходить по адресу формы
@@ -19,30 +17,24 @@ function EditProfilePopup(props) {
 
     //Передаём значения управляемых компонентов во внешний обработчик
     props.onUpdateUser({
-      name: userName,
-      about: userAbout
+      name: name,
+      about: about,
     });
   }
 
   // После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
-  useEffect(() => {
+  useEffect(() => { 
     setName(currentUser.name);
     setAbout(currentUser.about);
   }, [currentUser, props.isOpen]);
 
   useEffect(() => {
-    if (values.name) {
-      setUserName(values.name);
-    } else {
-      setUserName(name);
-    }
+    setName(values.name);
+  }, [values.name])
 
-    if (values.about) {
-      setUserAbout(values.about);
-    } else {
-      setUserAbout(about);
-    }
-  }, [values.name, values.about, name, about])
+  useEffect(() => {
+    setAbout(values.about);
+  }, [values.about])
 
   return (
     <PopupWithForm

@@ -12,9 +12,8 @@ const INTERNAL_SERVER_ERROR_500 = http2.constants.HTTP_STATUS_INTERNAL_SERVER_ER
 
 const SALT_ROUND = 10;
 const SECRET_KEY = 'some-secret-key';
-const URL_REGEX = /^(http|https):\/\/[w{3}.]?[\w-._~:/?#[\]@!$&'()*+,;=]#?/;
-const URL_REGEX_LINK = /^(http|https):\/\/[w{3}.]?[\w-._~:/?#[\]@!$&'()*+,;=]#?/gi;
-const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+
+const URL_REGEX = /^(http|https):\/\/[w{3}.]?[\w-._~:/?#[\]@!$&'()*+,;=]#?/i;
 
 const CORS_OPTIONS = {
   origin: [
@@ -38,6 +37,7 @@ const DEFAULT_AVATAR = 'https://pictures.s3.yandex.net/resources/jacques-coustea
 // messages
 const PAGE_NOT_FOUND_MESSAGE = 'Страница по указанному маршруту не найдена';
 const NOT_FOUND_ERROR_MESSAGE = 'Запрашиваемые данные не найдены';
+const CONFLICT_ERROR_MESSAGE = 'Пользователь с таким email уже существует';
 const BAD_REQUEST_ERROR_MESSAGE = 'Передан невалидный id';
 const FORBIDDEN_ERROR_MESSAGE = 'Можно удалять только свои карточки';
 const INTERNAL_SERVER_ERROR_MESSAGE = 'На сервере произошла ошибка';
@@ -59,8 +59,6 @@ module.exports = {
   SALT_ROUND,
   SECRET_KEY,
   URL_REGEX,
-  URL_REGEX_LINK,
-  DEFAULT_ALLOWED_METHODS,
   CORS_OPTIONS,
   MONGO_BASE,
   DEFAULT_NAME,
@@ -68,6 +66,7 @@ module.exports = {
   DEFAULT_AVATAR,
   PAGE_NOT_FOUND_MESSAGE,
   NOT_FOUND_ERROR_MESSAGE,
+  CONFLICT_ERROR_MESSAGE,
   BAD_REQUEST_ERROR_MESSAGE,
   FORBIDDEN_ERROR_MESSAGE,
   INTERNAL_SERVER_ERROR_MESSAGE,

@@ -6,7 +6,7 @@ const BadRequestError = require('../middlewares/errors/bad-request-error');
 const UnauthorizedError = require('../middlewares/errors/unauthorized-error');
 
 const {
-  URL_REGEX_LINK,
+  URL_REGEX,
   DEFAULT_NAME,
   DEFAULT_ABOUT,
   DEFAULT_AVATAR,
@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     default: DEFAULT_AVATAR,
     validate: {
       validator(value) {
-        return URL_REGEX_LINK.test(value);
+        return URL_REGEX.test(value);
       },
       message: VALIDATION_MESSAGE,
     },

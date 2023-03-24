@@ -8,6 +8,7 @@ const {
   SALT_ROUND,
   SECRET_KEY,
   NOT_FOUND_ERROR_MESSAGE,
+  CONFLICT_ERROR_MESSAGE,
   BAD_REQUEST_ERROR_MESSAGE,
   EXIT_MESSAGE,
 } = require('../config/config');
@@ -39,12 +40,12 @@ module.exports.createUser = (req, res, next) => {
         name,
         about,
         avatar,
-        // email,
+        email,
       });
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError(err));
+        next(new ConflictError(CONFLICT_ERROR_MESSAGE));
       } else {
         next(err);
       }

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const {
-  URL_REGEX_LINK,
+  URL_REGEX,
   VALIDATION_MESSAGE,
 } = require('../config/config');
 
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(value) {
-        return URL_REGEX_LINK.test(value);
+        return URL_REGEX.test(value);
       },
       message: VALIDATION_MESSAGE,
     },

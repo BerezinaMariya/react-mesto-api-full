@@ -1,7 +1,7 @@
 class Api {
   constructor() {
-    //this.baseUrl = "https://api.mesto.berezina.nomoredomains.club";
-    this.baseUrl = "http://localhost:3001";
+    this.baseUrl = "https://api.mesto.berezina.nomoredomains.club";
+    //this.baseUrl = "http://localhost:3001";
   }
  
   //Проверка ответа от сервера
@@ -11,7 +11,7 @@ class Api {
     }
 
     // если ошибка, отклоняем промис
-    return Promise.reject(`Ошибка: ${res.status}`);
+    return Promise.reject(res);
   }
 
   //Получение массива исходных карточек

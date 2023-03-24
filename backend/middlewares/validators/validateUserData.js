@@ -1,7 +1,7 @@
 const { celebrate, Joi } = require('celebrate');
 
-const { URL_REGEX } = require('../../config/config');
 const { isIdValid } = require('../../helpers/isIdValid');
+const { URL_REGEX } = require('../../config/config');
 
 const nameAndAboutValidationRequirements = Joi.string().min(2).max(30);
 const avatarValidationRequirements = Joi.string().regex(URL_REGEX);
