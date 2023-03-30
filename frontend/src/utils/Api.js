@@ -1,7 +1,11 @@
 class Api {
   constructor() {
-    this.baseUrl = "https://api.mesto.berezina.nomoredomains.club";
-    //this.baseUrl = "http://localhost:3001";
+    //this.baseUrl = "https://api.mesto.berezina.nomoredomains.club";
+    this.baseUrl = "http://localhost:3001";
+    this.headers =  {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    };
   }
  
   //Проверка ответа от сервера
@@ -17,9 +21,7 @@ class Api {
   //Получение массива исходных карточек
   getInitialCards() {
     return fetch(`${this.baseUrl}/cards`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: this.headers,
       credentials: "include",
     }).then(this._checkResponse);
   }
@@ -27,9 +29,7 @@ class Api {
   //Получение данных пользователя
   getUserInfo() {
     return fetch(`${this.baseUrl}/users/me`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: this.headers,
       credentials: "include",
     }).then(this._checkResponse);
   }
@@ -38,9 +38,7 @@ class Api {
   setUserInfo(user) {
     return fetch(`${this.baseUrl}/users/me`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: this.headers,
       body: JSON.stringify({
         name: user.name,
         about: user.about,
@@ -53,9 +51,7 @@ class Api {
   setAvatar(avatar) {
     return fetch(`${this.baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: this.headers,
       body: JSON.stringify({
         avatar: avatar,
       }),
@@ -67,9 +63,7 @@ class Api {
   setNewCard(card) {
     return fetch(`${this.baseUrl}/cards`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: this.headers,
       body: JSON.stringify({
         name: card.name,
         link: card.link,
@@ -82,9 +76,7 @@ class Api {
   deleteCard(cardId) {
     return fetch(`${this.baseUrl}/cards/${cardId}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: this.headers,
       credentials: "include",
     }).then(this._checkResponse);
   }
@@ -94,17 +86,13 @@ class Api {
     if (notLiked) {
       return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: this.headers,
         credentials: "include",
       }).then(this._checkResponse);
     } else {
       return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: this.headers,
         credentials: "include",
       }).then(this._checkResponse);
     }
@@ -114,10 +102,7 @@ class Api {
   register( name, about, avatar, email, password ) {
     return fetch(`${this.baseUrl}/signup`, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      headers: this.headers,
       body: JSON.stringify({ name, about, avatar, email, password }),
     }).then(this._checkResponse);
   }
@@ -126,10 +111,7 @@ class Api {
   authorize(password, email) {
     return fetch(`${this.baseUrl}/signin`, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      headers: this.headers,
       credentials: "include",
       body: JSON.stringify({ password, email }),
     }).then(this._checkResponse);
@@ -138,10 +120,7 @@ class Api {
   //Проверка токена, получение email
   getEmail() {
     return fetch(`${this.baseUrl}/users/me`, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      headers: this.headers,
       credentials: "include",
     }).then(this._checkResponse);
   }
@@ -150,10 +129,7 @@ class Api {
   exit() {
     return fetch(`${this.baseUrl}/users/signout`, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      headers: this.headers,
       credentials: "include",
     }).then(this._checkResponse);
   }
