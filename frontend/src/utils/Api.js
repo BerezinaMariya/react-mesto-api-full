@@ -34,6 +34,14 @@ class Api {
     }).then(this._checkResponse);
   }
 
+   //Проверка токена, получение email
+   getEmail() {
+    return fetch(`${this.baseUrl}/users/me`, {
+      headers: this.headers,
+      credentials: "include",
+    }).then(this._checkResponse);
+  }
+
   //Отправка отредактированных данных пользователя
   setUserInfo(user) {
     return fetch(`${this.baseUrl}/users/me`, {
@@ -114,14 +122,6 @@ class Api {
       headers: this.headers,
       credentials: "include",
       body: JSON.stringify({ password, email }),
-    }).then(this._checkResponse);
-  }
-
-  //Проверка токена, получение email
-  getEmail() {
-    return fetch(`${this.baseUrl}/users/me`, {
-      headers: this.headers,
-      credentials: "include",
     }).then(this._checkResponse);
   }
 

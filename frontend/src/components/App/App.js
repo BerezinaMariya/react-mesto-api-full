@@ -89,6 +89,7 @@ function getEmail( setLoggedIn, history, setCurrentUser) {
       setCurrentUser({ email: res.email });
     })
     .catch((err) => {
+      setLoggedIn(false);
       alert(`${err} Проверка авторизации не пройдена`);
     });
 }
